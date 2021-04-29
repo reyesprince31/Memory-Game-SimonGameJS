@@ -139,3 +139,25 @@ footer {
 .dev__name {
 	padding: 10px;
 }
+
+@media only screen and (max-width: 600px) {
+	body {
+		background-color: lightgreen;
+	}
+	.btn {
+		margin: 10px;
+		height: 120px;
+		width: 120px;
+		border: 10px solid black;
+		border-radius: 15%;
+		font-size: 100px;
+		cursor: pointer;
+	}
+	.message__area {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-top: 40px;
+		padding: 10px;
+	}
+}
