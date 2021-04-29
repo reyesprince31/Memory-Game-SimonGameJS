@@ -1,26 +1,87 @@
 const buttonColors = ["red", "blue", "green", "yellow"];
+const randomNumber = Math.round(Math.random() * 3);
+const randomChosenColor = buttonColors[randomNumber];
+
 let gamePattern = [];
+let gameArray = gamePattern - gamePattern;
 let userClickedPattern = [];
-let started = false;
-let level = 0;
+let started;
+let level;
+let loopCounter;
 
-//----------- Game Pattern ------------ //
+const levelTitle = document.querySelector("#level__title");
+const buttonStart = document.querySelector("#start__button");
+const buttonSelector = document.querySelectorAll(".btn");
+const bodySelector = document.querySelector("body");
 
-document.addEventListener("keydown", () => {
-	// console.log(e.key);
-	if (!started) {
-		document.querySelector("#level__title").innerHTML = `Level ${level}`;
-		nextSequence();
-		started = true;
+buttonStart.addEventListener("click", () => {
+	if (buttonStart.innerHTML === "Restart") {
+		startOver();
 	}
+	// console.log(e.key);
+	setTimeout(() => {
+		if (!started) {
+			gameArray = 0;
+			level = 0;
+			started = true;
+			loopCounter = false;
+
+			buttonStart.innerHTML = "Restart";
+
+			nextSequence();
+		}
+	}, 700);
 });
 
-//-------------- User Pattern -------------//
+function nextSequence() {
+	setTimeout(() => {
+		gameArray++;
+		userClickedPattern = [];
+		levelTitle.innerHTML = `Level ${level + 1}`;
+		if (level === 0) {
+			start();
+		}
 
-const buttonSelector = document.querySelectorAll(".btn");
+		loop(level);
+		loopCounter = true;
+		level++;
+	}, 300);
+}
+
+const timer = (ms) => new Promise((res) => setTimeout(res, ms));
+async function loop(level) {
+	console.log("current level in loop: " + level);
+	console.log("Game:" + gameArray);
+	if (loopCounter) {
+		level++;
+		for (let i = 0; i < level; i++) {
+			console.log("loop Count " + i);
+			// console.log("in for loop: " + level);
+			// console.log("in for Game:" + gameArray);
+			animatePress(gamePattern[i], 0);
+
+			playSound(gamePattern[i]);
+
+			await timer(800);
+		}
+	} else {
+		animatePress(gamePattern[level], 0);
+
+		playSound(gamePattern[level]);
+	}
+}
+
+function start() {
+	for (let i = 0; i < 20; i++) {
+		gamePattern.push(buttonColors[Math.round(Math.random() * 3)]);
+	}
+	console.log(gamePattern);
+	console.log(gamePattern[level]);
+}
+
 for (let i = 0; i < buttonSelector.length; i++) {
-	document.querySelectorAll(".btn")[i].addEventListener("click", (e) => {
-		const userChosenColor = e.target.value;
+	buttonSelector[i].addEventListener("click", (e) => {
+		let userChosenColor = e.target.value;
 		console.log("Click: " + userChosenColor);
 
 		userClickedPattern.push(userChosenColor);
@@ -32,12 +93,14 @@ for (let i = 0; i < buttonSelector.length; i++) {
 	});
 }
 
-//------------ Check if Game and User correct ----------//
-
 const checkAnswer = (currentLevel) => {
 	if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {
-		if (userClickedPattern.length === gamePattern.length) {
+		// console.log("correct");
+		// console.log("checkAnswer " + gameArray);
+
+		if (userClickedPattern.length === gameArray) {
 			console.log("User Click: " + userClickedPattern);
+
 			setTimeout(() => {
 				nextSequence();
 			}, 1000);
@@ -46,44 +109,30 @@ const checkAnswer = (currentLevel) => {
 		playSound("wrong");
 
 		console.log("Game Over");
+		buttonStart.innerHTML = "Start";
 
-		document.querySelector("body").classList.add("game-over");
+		bodySelector.classList.add("game-over");
 
 		setTimeout(() => {
-			document.querySelector("body").classList.remove("game-over");
+			bodySelector.classList.remove("game-over");
 		}, 200);
 
-		document.querySelector("#level__title").innerHTML =
-			"Game Over, Press Any Key To Restart?";
+		levelTitle.innerHTML = "Game Over?";
 
 		startOver();
 	}
 };
 
-//--------- call functions -----------//
-
-const nextSequence = () => {
-	userClickedPattern = [];
-	level++;
-	document.querySelector("#level__title").innerHTML = `Level ${level}`;
-
-	const randomNumber = Math.round(Math.random() * 3);
-	const randomChosenColor = buttonColors[randomNumber];
-	gamePattern.push(randomChosenColor);
-
-	console.log("Random pattern: " + gamePattern);
-
-	animatePress(randomChosenColor, 0);
-	playSound(randomChosenColor);
-};
-
-const startOver = () => {
-	level = 0;
+function startOver() {
 	gamePattern = [];
+	userClickedPattern = [];
 	started = false;
-};
+	loopCounter = false;
+	level;
+	gameArray;
+}
 
-const animatePress = (currentColor, num) => {
+function animatePress(currentColor, num) {
 	const elements = document.querySelectorAll(`.box__${currentColor}`);
 	const result = elements[num].classList;
 
@@ -101,8 +150,8 @@ const animatePress = (currentColor, num) => {
 			result.remove("pressed");
 		}, 100);
 	}
-};
+}
 
-const playSound = (name) => {
+function playSound(name) {
 	new Audio(`/sounds/${name}.mp3`).play();
-};
+}
