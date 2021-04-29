@@ -1,15 +1,44 @@
+:root {
+	--font-family: "Press Start 2P", cursive;
+}
+
 body {
+	height: 100vh;
 	text-align: center;
 	background-color: lightskyblue;
 }
 
-#level__title,
+h1,
+h2,
+#level__title {
+	font-family: var(--font-family);
+}
+
 h1 {
-	font-family: "Press Start 2P", cursive;
-	font-size: 3rem;
-	margin-bottom: 50px;
+	display: inline-flex;
+	background: linear-gradient(to right, green, red, yellow, blue);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+	margin-bottom: 0px;
+
+	font-size: 5rem;
+	-webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+	-webkit-text-stroke-width: 2px;
+	-webkit-text-stroke-color: black;
+}
+
+.message__area {
+	display: inline-flex;
+	margin-top: 40px;
+	padding: 10px;
+}
+
+#level__title {
+	font-size: 2rem;
 	color: mediumslateblue;
 	text-shadow: 2px 2px navy;
+	margin-right: 30px;
 }
 
 .container__area {
@@ -101,4 +130,12 @@ h1 {
 
 .fadeOut {
 	opacity: 1;
+}
+
+footer {
+	padding: 20px;
+}
+
+.dev__name {
+	padding: 10px;
 }

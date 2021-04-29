@@ -10,11 +10,15 @@
 </head>
 
 <body>
-  <h1>Simon Game</h1>
-  <h1 id="level__title">Press the button</h1>
-  <button id="start__button" class="box">START</button>
-  <div class="container__area">
+  <h1>Memory Game</h1>
+  <h2>Remember the Color Sequence</h2>
 
+  <div class="message__area">
+    <h2 id="level__title">Press the button to </h1>
+      <button id="start__button" class="box">START</button>
+  </div>
+
+  <div class="container__area">
 
     <div class="console__area">
 
@@ -31,15 +35,24 @@
 
     <div class="button__area">
 
-      <button class="btn box__green" value='green'>G</button>
-      <button class="btn box__red" value='red'>R</button>
-      <button class="btn box__yellow" value='yellow'>Y</button>
-      <button class="btn box__blue" value='blue'>B</button>
+      <button id="user__btn" class="btn box__green" value='green'>G</button>
+      <button id="user__btn" class="btn box__red" value='red'>R</button>
+      <button id="user__btn" class="btn box__yellow" value='yellow'>Y</button>
+      <button id="user__btn" class="btn box__blue" value='blue'>B</button>
 
     </div>
 
   </div>
 
+  <footer>&copy; Copyright
+    <a href="https://en.wikipedia.org/wiki/Ralph_H._Baer" style="text-decoration: none;">Ralph H. Baer</a>
+    <div class="dev__name">
+      <Strong>Develop by: </Strong>
+      <a href="https://www.linkedin.com/in/reyesprince/"> Prince Reyes.</a>
+      <script>document.write(new Date().getFullYear())</script>,
+    </div>
+
+  </footer>
 </body>
 
 </html>

@@ -8,36 +8,60 @@ let userClickedPattern = [];
 let started;
 let level;
 let loopCounter;
+let countdown;
+let disableBtn;
+let gameStart;
 
 const levelTitle = document.querySelector("#level__title");
 const buttonStart = document.querySelector("#start__button");
 const buttonSelector = document.querySelectorAll(".btn");
 const bodySelector = document.querySelector("body");
 
-buttonStart.addEventListener("click", () => {
-	if (buttonStart.innerHTML === "Restart") {
-		startOver();
+for (let i = 0; i < buttonSelector.length; i++) {
+	disableBtn += buttonSelector[i].disabled = true;
+}
+
+function buttonUnlock(gameStart) {
+	for (let i = 0; i < buttonSelector.length; i++) {
+		disableBtn += buttonSelector[i].disabled = gameStart;
 	}
-	// console.log(e.key);
-	setTimeout(() => {
+}
+
+gameComence(buttonStart);
+
+function gameComence() {
+	buttonStart.addEventListener("click", () => {
+		if (buttonStart.innerHTML === "Restart") {
+			startOver();
+		}
+
 		if (!started) {
 			gameArray = 0;
 			level = 0;
+			countdown = 6;
 			started = true;
+			gameStart = false;
 			loopCounter = false;
 
-			buttonStart.innerHTML = "Restart";
+			let readyCount = setInterval(() => {
+				levelTitle.innerHTML = `Game starts in ${--countdown}`;
 
-			nextSequence();
+				if (countdown <= 0) {
+					nextSequence();
+					clearInterval(readyCount);
+				}
+			}, 1000);
+
+			buttonStart.innerHTML = "Restart";
 		}
-	}, 700);
-});
+	});
+}
 
 function nextSequence() {
 	setTimeout(() => {
 		gameArray++;
 		userClickedPattern = [];
-		levelTitle.innerHTML = `Level ${level + 1}`;
+		levelTitle.innerHTML = `Game Level: ${level + 1}`;
 		if (level === 0) {
 			start();
 		}
@@ -45,7 +69,8 @@ function nextSequence() {
 		loop(level);
 		loopCounter = true;
 		level++;
-	}, 300);
+		buttonUnlock(gameStart);
+	}, 800);
 }
 
 const timer = (ms) => new Promise((res) => setTimeout(res, ms));
@@ -106,6 +131,7 @@ const checkAnswer = (currentLevel) => {
 			}, 1000);
 		}
 	} else {
+		gameStart = true;
 		playSound("wrong");
 
 		console.log("Game Over");
@@ -117,19 +143,19 @@ const checkAnswer = (currentLevel) => {
 			bodySelector.classList.remove("game-over");
 		}, 200);
 
-		levelTitle.innerHTML = "Game Over?";
-
 		startOver();
 	}
 };
 
 function startOver() {
+	levelTitle.innerHTML = `GameOver (Your Score: ${level - 1})`;
 	gamePattern = [];
 	userClickedPattern = [];
 	started = false;
 	loopCounter = false;
 	level;
 	gameArray;
+	buttonUnlock(gameStart);
 }
 
 function animatePress(currentColor, num) {
