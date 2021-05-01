@@ -29,11 +29,6 @@ gameComence(buttonStart); //2.) button start
 
 function gameComence() {
 	//3.) verifiy before execution
-	window.addEventListener("touchstart", () => {
-		//3.a) activate sounds on iOS
-		document.getElementById("audio").muted = false;
-		document.getElementById("audio").play();
-	});
 
 	buttonStart.addEventListener("click", () => {
 		//3.b) when buttonStart click, execute!
