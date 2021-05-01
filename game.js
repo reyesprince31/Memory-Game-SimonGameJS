@@ -2,97 +2,124 @@ const buttonColors = ["red", "blue", "green", "yellow"];
 const randomNumber = Math.round(Math.random() * 3);
 const randomChosenColor = buttonColors[randomNumber];
 
+let userClickedPattern = [];
 let gamePattern = [];
 let gameArray = gamePattern - gamePattern;
-let userClickedPattern = [];
 let started;
 let level;
 let loopCounter;
 let countdown;
 let disableBtn;
 let gameStart;
+let readyCount;
 
 const levelTitle = document.querySelector("#level__title");
 const buttonStart = document.querySelector("#start__button");
 const buttonSelector = document.querySelectorAll(".btn");
 const bodySelector = document.querySelector("body");
 
-for (let i = 0; i < buttonSelector.length; i++) {
-	disableBtn += buttonSelector[i].disabled = true;
-}
-
-function buttonUnlock(gameStart) {
+function firstLoad() {
 	for (let i = 0; i < buttonSelector.length; i++) {
-		disableBtn += buttonSelector[i].disabled = gameStart;
+		//1.) onLoad disable buttons
+		disableBtn = buttonSelector[i].disabled = true;
 	}
 }
 
-gameComence(buttonStart);
+gameComence(buttonStart); //2.) button start
 
 function gameComence() {
+	//3.) verifiy before execution
+	window.addEventListener("touchstart", () => {
+		//3.a) activate sounds on iOS
+		document.getElementById("audio").muted = false;
+		document.getElementById("audio").play();
+	});
+
 	buttonStart.addEventListener("click", () => {
+		//3.b) when buttonStart click, execute!
+		buttonStart.disabled = true;
+
 		if (buttonStart.innerHTML === "Restart") {
+			//3.c) if buttonStart = "Restart"
 			startOver();
 		}
 
 		if (!started) {
+			//3.d) if started is not true,
 			gameArray = 0;
 			level = 0;
-			countdown = 6;
+			countdown = 4;
 			started = true;
 			gameStart = false;
 			loopCounter = false;
 
-			let readyCount = setInterval(() => {
+			readyCount = setInterval(() => {
+				//4.) before execution, another verification.
 				levelTitle.innerHTML = `Game starts in ${--countdown}`;
 
+				if (countdown >= 1) {
+					playSound("5loop");
+				} else {
+					playSound("go");
+				}
+
 				if (countdown <= 0) {
+					//unlock all buttons and execute
+
+					buttonStart.disabled = gameStart;
+					buttonStart.innerHTML = "Restart";
+
 					nextSequence();
 					clearInterval(readyCount);
 				}
 			}, 1000);
-
-			buttonStart.innerHTML = "Restart";
 		}
 	});
 }
 
+function buttonUnlock(gameStart) {
+	for (let i = 0; i < buttonSelector.length; i++) {
+		disableBtn = buttonSelector[i].disabled = gameStart;
+	}
+}
+
 function nextSequence() {
 	setTimeout(() => {
-		gameArray++;
 		userClickedPattern = [];
+
 		levelTitle.innerHTML = `Game Level: ${level + 1}`;
 		if (level === 0) {
 			start();
 		}
 
 		loop(level);
+
 		loopCounter = true;
 		level++;
-		buttonUnlock(gameStart);
+		gameArray++;
 	}, 800);
 }
 
 const timer = (ms) => new Promise((res) => setTimeout(res, ms));
 async function loop(level) {
-	console.log("current level in loop: " + level);
-	console.log("Game:" + gameArray);
 	if (loopCounter) {
 		level++;
 		for (let i = 0; i < level; i++) {
-			console.log("loop Count " + i);
-			// console.log("in for loop: " + level);
-			// console.log("in for Game:" + gameArray);
 			animatePress(gamePattern[i], 0);
 
 			playSound(gamePattern[i]);
 
 			await timer(800);
 		}
+		buttonStart.disabled = false;
+
+		buttonUnlock(gameStart);
 	} else {
 		animatePress(gamePattern[level], 0);
 
 		playSound(gamePattern[level]);
+
+		buttonUnlock(gameStart);
 	}
 }
 
@@ -100,14 +127,11 @@ function start() {
 	for (let i = 0; i < 20; i++) {
 		gamePattern.push(buttonColors[Math.round(Math.random() * 3)]);
 	}
-	console.log(gamePattern);
-	console.log(gamePattern[level]);
 }
 
 for (let i = 0; i < buttonSelector.length; i++) {
 	buttonSelector[i].addEventListener("click", (e) => {
 		let userChosenColor = e.target.value;
-		console.log("Click: " + userChosenColor);
 
 		userClickedPattern.push(userChosenColor);
 
@@ -120,22 +144,29 @@ for (let i = 0; i < buttonSelector.length; i++) {
 
 const checkAnswer = (currentLevel) => {
 	if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {
-		// console.log("correct");
-		// console.log("checkAnswer " + gameArray);
-
 		if (userClickedPattern.length === gameArray) {
-			console.log("User Click: " + userClickedPattern);
+			if (userClickedPattern.length === gamePattern.length) {
+				levelTitle.innerHTML = "Congrats you beat highest Level!";
+				firstLoad();
+				level++;
+				gameArray--;
+			} else {
+				levelTitle.innerHTML = "Correct!";
+				firstLoad();
+				buttonStart.disabled = true;
 
-			setTimeout(() => {
-				nextSequence();
-			}, 1000);
+				setTimeout(() => {
+					nextSequence();
+				}, 1000);
+			}
 		}
 	} else {
 		gameStart = true;
 		playSound("wrong");
 
-		console.log("Game Over");
 		buttonStart.innerHTML = "Start";
+
+		levelTitle.innerHTML = `GameOver (Your Score: ${level - 1})`;
 
 		bodySelector.classList.add("game-over");
 
@@ -143,19 +174,18 @@ const checkAnswer = (currentLevel) => {
 			bodySelector.classList.remove("game-over");
 		}, 200);
 
+		firstLoad();
 		startOver();
 	}
 };
 
 function startOver() {
-	levelTitle.innerHTML = `GameOver (Your Score: ${level - 1})`;
 	gamePattern = [];
 	userClickedPattern = [];
 	started = false;
 	loopCounter = false;
 	level;
 	gameArray;
-	buttonUnlock(gameStart);
 }
 
 function animatePress(currentColor, num) {
