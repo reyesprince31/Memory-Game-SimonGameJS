@@ -181,6 +181,7 @@ function startOver() {
 	loopCounter = false;
 	level;
 	gameArray;
+	gameStart;
 }
 
 function animatePress(currentColor, num) {
