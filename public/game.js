@@ -1,4 +1,5 @@
 const buttonColors = ["red", "blue", "green", "yellow"];
+const soundLists = ["5loop", "go", "wrong", ...buttonColors];
 const randomNumber = Math.round(Math.random() * 3);
 const randomChosenColor = buttonColors[randomNumber];
 
@@ -12,6 +13,7 @@ let countdown;
 let disableBtn;
 let gameStart;
 let readyCount;
+let loaded = true;
 
 const levelTitle = document.querySelector("#level__title");
 const buttonStart = document.querySelector("#start__button");
@@ -23,6 +25,11 @@ function firstLoad() {
 		//1.) onLoad disable buttons
 		disableBtn = buttonSelector[i].disabled = true;
 	}
+
+	for (let i = 0; i < soundLists.length; i++) {
+		new Audio(`/public/sounds/${soundLists[i]}.mp3`);
+		console.log("Preload");
+	}
 }
 
 gameComence(buttonStart); //2.) button start
@@ -33,6 +40,7 @@ function gameComence() {
 	buttonStart.addEventListener("click", () => {
 		//3.b) when buttonStart click, execute!
 		buttonStart.disabled = true;
+		loaded = false;
 
 		if (buttonStart.innerHTML === "Restart") {
 			//3.c) if buttonStart = "Restart"
@@ -205,10 +213,13 @@ function animatePress(currentColor, num) {
 }
 
 function playSound(name) {
-	var audio = new Audio(
-		`https://github.com/reyesprince31/Memory-Game-SimonGameJS/tree/main/sounds/${name}`
-	);
+	// var audio = new Audio(
+	// 	`https://github.com/reyesprince31/Memory-Game-SimonGameJS/tree/main/sounds/${name}`
+	// );
+	// audio.play();
+
+	const audio = new Audio(`/public/sounds/${name}.mp3`);
 	audio.play();
 
-	new Audio(`/sounds/${name}.mp3`).play();
+	console.log(audio);
 }
