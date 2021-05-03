@@ -213,11 +213,6 @@ function animatePress(currentColor, num) {
 }
 
 function playSound(name) {
-	// var audio = new Audio(
-	// 	`https://github.com/reyesprince31/Memory-Game-SimonGameJS/tree/main/sounds/${name}`
-	// );
-	// audio.play();
-
 	const audio = new Audio(`/public/sounds/${name}.mp3`);
 	audio.play();
 
