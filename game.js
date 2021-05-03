@@ -27,7 +27,7 @@ function firstLoad() {
 	}
 
 	for (let i = 0; i < soundLists.length; i++) {
-		new Audio(`/public/sounds/${soundLists[i]}.mp3`);
+		new Audio(`/sounds/${soundLists[i]}.mp3`);
 		console.log("Preload");
 	}
 }
@@ -213,7 +213,7 @@ function animatePress(currentColor, num) {
 }
 
 function playSound(name) {
-	const audio = new Audio(`/public/sounds/${name}.mp3`);
+	const audio = new Audio(`/sounds/${name}.mp3`);
 	audio.play();
 
 	console.log(audio);
