@@ -27,7 +27,7 @@ function firstLoad() {
 	}
 
 	for (let i = 0; i < soundLists.length; i++) {
-		new Audio(`/sounds/${soundLists[i]}.mp3`);
+		new Audio(`./sounds/${soundLists[i]}.mp3`);
 		console.log("Preload");
 	}
 }
