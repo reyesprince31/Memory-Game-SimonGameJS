@@ -213,7 +213,7 @@ function animatePress(currentColor, num) {
 }
 
 function playSound(name) {
-	const audio = new Audio(`/sounds/${name}.mp3`);
+	const audio = new Audio(`./sounds/${name}.mp3`);
 	audio.play();
 
 	console.log(audio);
